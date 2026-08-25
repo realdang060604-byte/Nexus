@@ -58,6 +58,9 @@ export default function NexusCommand({
 
       setResponse('');
 
+      // Clear immediately after accepting the command while the API works.
+      setMessage('');
+
       const result =
         await sendNexusCommand(
           cleanMessage
@@ -76,8 +79,6 @@ export default function NexusCommand({
         Boolean(result.requiresConfirmation)
       );
 
-      setMessage('');
-
       await onCompleted();
 
     } catch (error) {
@@ -91,6 +92,11 @@ export default function NexusCommand({
         error instanceof Error
           ? `Không thể xử lý yêu cầu: ${error.message}`
           : 'Không thể kết nối với NEXUS.'
+      );
+
+      // Restore the command when delivery fails so it can be retried.
+      setMessage(currentMessage =>
+        currentMessage.trim() ? currentMessage : cleanMessage
       );
 
     } finally {
