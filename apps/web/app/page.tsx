@@ -984,7 +984,8 @@ function TaskItem({
           }
 
           title="Xóa công việc"
-          className="rounded-lg px-2 py-1 text-zinc-600 transition hover:bg-red-950 hover:text-red-400 disabled:opacity-50"
+          aria-label="Xóa công việc"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-red-900/50 bg-red-950/30 text-red-400 transition active:scale-95 hover:border-red-700 hover:bg-red-950 disabled:opacity-50"
         >
           ✕
         </button>
@@ -1182,7 +1183,8 @@ function TransactionItem({
         }
 
         title="Xóa giao dịch"
-        className="rounded-lg px-2 py-1 text-zinc-700 opacity-0 transition group-hover:opacity-100 hover:bg-red-950 hover:text-red-400 disabled:opacity-50"
+        aria-label="Xóa giao dịch"
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-red-900/50 bg-red-950/30 text-red-400 transition active:scale-95 hover:border-red-700 hover:bg-red-950 disabled:opacity-50"
       >
         ✕
       </button>
