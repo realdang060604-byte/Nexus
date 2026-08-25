@@ -1,0 +1,84 @@
+@baseUrl = http://localhost:5000
+@taskId = 6a7d21df299cc74e1035bf5a
+@transactionId = 6a7d3b5348385a228659430c
+
+### ==========================================
+### NEXUS COMMAND - EXPENSE
+### ==========================================
+
+POST {{baseUrl}}/api/nexus/command
+Content-Type: application/json
+
+{
+  "message": "Ăn sáng 35k"
+}
+
+
+### ==========================================
+### NEXUS COMMAND - INCOME
+### ==========================================
+
+POST {{baseUrl}}/api/nexus/command
+Content-Type: application/json
+
+{
+  "message": "Nhận lương 15 triệu"
+}
+
+
+### ==========================================
+### NEXUS COMMAND - SAVING
+### ==========================================
+
+POST {{baseUrl}}/api/nexus/command
+Content-Type: application/json
+
+{
+  "message": "Chuyển 2 triệu sang tài khoản tiết kiệm"
+}
+
+
+### ==========================================
+### NEXUS COMMAND - CREATE TASK
+### ==========================================
+
+POST {{baseUrl}}/api/nexus/command
+Content-Type: application/json
+
+{
+  "message": "Tạo công việc tiếp tục phát triển NEXUS"
+}
+
+
+### ==========================================
+### NEXUS COMMAND - LIST TASKS
+### ==========================================
+
+POST {{baseUrl}}/api/nexus/command
+Content-Type: application/json
+
+{
+  "message": "Tôi còn những công việc nào?"
+}
+
+
+### ==========================================
+### NEXUS COMMAND - FINANCE SUMMARY
+### ==========================================
+
+POST {{baseUrl}}/api/nexus/command
+Content-Type: application/json
+
+{
+  "message": "Tình hình tài chính của tôi hiện tại thế nào?"
+}
+### Verify transactions
+GET {{baseUrl}}/api/finance/transactions
+
+
+### Verify tasks
+GET {{baseUrl}}/api/tasks
+
+
+### Verify finance summary
+GET {{baseUrl}}/api/finance/summary

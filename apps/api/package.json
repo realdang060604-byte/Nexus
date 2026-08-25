@@ -1,0 +1,36 @@
+{
+  "name": "nexus-api",
+  "version": "0.0.1",
+  "description": "Backend API for NEXUS",
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run build && node --test dist/app.integration.test.js dist/ai/command.validator.test.js dist/core/confirmation.test.js dist/http/request-user.test.js dist/utils/vietnam-time.test.js",
+    "calendar:test": "tsx src/integrations/calendar/calendar.test.ts",
+    "migrate:user-ownership": "tsx src/scripts/migrate-user-ownership.ts"
+  },
+  "private": true,
+  "engines": {
+    "node": "22.x"
+  },
+  "dependencies": {
+    "@google-cloud/local-auth": "^3.0.1",
+    "@google/genai": "^2.17.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "googleapis": "^174.0.1",
+    "mongoose": "^9.9.2",
+    "telegraf": "^4.16.3"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.2.0",
+    "tsx": "^4.23.12",
+    "typescript": "^7.0.2"
+  }
+}
