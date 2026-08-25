@@ -5,10 +5,35 @@ import { parseNexusCommand } from './command.validator';
 const MODEL =
   process.env.GEMINI_MODEL ||
   'gemini-3.5-flash-lite';
+const routeKnownCommand = (message: string): NexusCommand | null => {
+  const normalized = message
+    .trim()
+    .toLocaleLowerCase('vi-VN')
+    .replace(/\s+/g, ' ');
+
+  if ([
+    'tổng quan hôm nay',
+    'tổng quan hôm nay của tôi',
+    'cho tôi tổng quan hôm nay',
+    'bản tin hôm nay',
+    'tóm tắt ngày hôm nay'
+  ].includes(normalized)) {
+    return {
+      intent: 'DAILY_BRIEFING',
+      confidence: 1,
+      arguments: {}
+    };
+  }
+
+  return null;
+};
 
 export const routeCommand = async (
   message: string
 ): Promise<NexusCommand> => {
+  const knownCommand = routeKnownCommand(message);
+  if (knownCommand) return knownCommand;
+
   const prompt = `
 You are the command router for NEXUS, a personal AI operating system.
 

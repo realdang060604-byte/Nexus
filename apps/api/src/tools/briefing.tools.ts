@@ -3,6 +3,18 @@ import { getTodayExpense } from '../modules/finance/finance.service';
 import { getTasks } from '../modules/tasks/task.service';
 import { getVietnamDayRange } from '../utils/vietnam-time';
 import { NexusTool } from './tool.types';
+const CALENDAR_TIMEOUT_MS = 8_000;
+
+const withTimeout = <T>(promise: Promise<T>, timeoutMs: number): Promise<T> =>
+  Promise.race([
+    promise,
+    new Promise<T>((_resolve, reject) => {
+      setTimeout(
+        () => reject(new Error('Google Calendar timed out')),
+        timeoutMs
+      );
+    })
+  ]);
 
 export const dailyBriefingTool:
 NexusTool<Record<string, never>> = {
@@ -14,7 +26,10 @@ NexusTool<Record<string, never>> = {
     const [tasks, expense, calendarResult] = await Promise.all([
       getTasks(context.userId),
       getTodayExpense(context.userId),
-      listCalendarEvents({ from, to, limit: 20 })
+      withTimeout(
+        listCalendarEvents({ from, to, limit: 20 }),
+        CALENDAR_TIMEOUT_MS
+      )
         .then(events => ({ events, error: null as string | null }))
         .catch(error => ({
           events: [],

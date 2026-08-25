@@ -73,6 +73,10 @@ export const generateNaturalResponse =
   }: GenerateResponseInput):
   Promise<string> => {
 
+    if (command.intent === 'DAILY_BRIEFING') {
+      return execution.message;
+    }
+
     let history:
       IConversationMessage[] = [];
 
