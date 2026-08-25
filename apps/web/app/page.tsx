@@ -801,29 +801,88 @@ function MonthlyCalendar({
   );
 }
 
+const parseCalendarDate = (value?: string | null): Date | null => {
+  if (!value) return null;
+  const date = new Date(value.length === 10 ? `${value}T00:00:00` : value);
+  return Number.isNaN(date.getTime()) ? null : date;
+};
+
+const formatEventDuration = (start: Date, end: Date): string | null => {
+  const minutes = Math.round((end.getTime() - start.getTime()) / 60_000);
+  if (minutes <= 0) return null;
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+  if (!hours) return `${minutes} phút`;
+  return remainingMinutes ? `${hours} giờ ${remainingMinutes} phút` : `${hours} giờ`;
+};
+
 function CalendarEventItem({
   event
 }: {
   event: CalendarEvent;
 }) {
+  const allDay = Boolean(event.startAt && !event.startAt.includes('T'));
+  const start = parseCalendarDate(event.startAt);
+  const end = parseCalendarDate(event.endAt);
+  const duration = !allDay && start && end
+    ? formatEventDuration(start, end)
+    : null;
+  const eventDate = start?.toLocaleDateString('vi-VN', {
+    weekday: 'long',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  }) || 'Chưa có ngày';
+  const time = (date: Date | null) => date?.toLocaleTimeString('vi-VN', {
+    hour: '2-digit',
+    minute: '2-digit'
+  }) || 'Chưa xác định';
+  const endLabel = end && start && end.toDateString() !== start.toDateString()
+    ? end.toLocaleString('vi-VN', {
+        day: '2-digit',
+        month: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+      })
+    : time(end);
+
   const content = (
     <>
-      <p className="text-xs font-medium uppercase tracking-wider text-blue-400">
-        {event.startAt
-          ? new Date(event.startAt).toLocaleString('vi-VN', {
-              weekday: 'short',
-              day: '2-digit',
-              month: '2-digit',
-              hour: event.startAt.includes('T') ? '2-digit' : undefined,
-              minute: event.startAt.includes('T') ? '2-digit' : undefined
-            })
-          : 'Chưa có thời gian'}
-      </p>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className="text-xs font-medium capitalize tracking-wide text-blue-300">
+          {eventDate}
+        </p>
+        {duration && (
+          <span className="rounded-full bg-violet-400/10 px-2 py-1 text-[10px] font-medium text-violet-200">
+            {duration}
+          </span>
+        )}
+      </div>
+
       <h3 className="mt-2 line-clamp-2 font-medium text-zinc-100">
         {event.title}
       </h3>
+
+      {allDay ? (
+        <div className="mt-3 rounded-xl border border-blue-400/20 bg-blue-400/10 px-3 py-2 text-sm font-medium text-blue-200">
+          Cả ngày
+        </div>
+      ) : (
+        <div className="mt-3 grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+          <div className="rounded-xl border border-white/8 bg-black/25 px-3 py-2">
+            <p className="text-[10px] uppercase tracking-wider text-zinc-500">Bắt đầu</p>
+            <p className="mt-1 font-mono text-sm font-semibold text-emerald-300">{time(start)}</p>
+          </div>
+          <span aria-hidden="true" className="text-zinc-600">→</span>
+          <div className="rounded-xl border border-white/8 bg-black/25 px-3 py-2">
+            <p className="text-[10px] uppercase tracking-wider text-zinc-500">Kết thúc</p>
+            <p className="mt-1 font-mono text-sm font-semibold text-rose-300">{endLabel}</p>
+          </div>
+        </div>
+      )}
+
       {event.location && (
-        <p className="mt-2 truncate text-xs text-zinc-500">
+        <p className="mt-3 truncate text-xs text-zinc-400">
           📍 {event.location}
         </p>
       )}
@@ -831,7 +890,7 @@ function CalendarEventItem({
   );
 
   const className =
-    'group block min-h-32 rounded-2xl border border-white/8 bg-black/30 p-4 transition duration-300 hover:-translate-y-0.5 hover:border-blue-400/30 hover:bg-blue-950/10';
+    'group block min-h-40 rounded-2xl border border-white/10 bg-black/35 p-4 transition duration-300 hover:-translate-y-0.5 hover:border-blue-400/40 hover:bg-blue-950/15';
 
   return event.htmlLink ? (
     <a
