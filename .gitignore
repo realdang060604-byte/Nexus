@@ -8,7 +8,7 @@ node_modules/
 
 # Local OAuth credentials and tokens
 credentials.json
-token.json
+token*.json
 
 # Build
 dist/
